@@ -3,6 +3,7 @@ if exists("b:current_syntax")
 endif
 
 hi Label guifg=white guibg=magenta
+hi xppComment guifg=white guibg=DarkGreen
 
 syn match   xpoHeader            "Exportfile for AOT version 1.0 or later"
 syn match   xppNumber            "\<\(0[0-7]*\|0[xX]\x\+\|\d\+\)[lL]\=\>"
