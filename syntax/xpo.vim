@@ -14,6 +14,8 @@ syn keyword   xppKeywords          abstract anytype as asc at avg break breakpoi
 syn region xppComment             start="/\*" end="\*/"
 syn match  xppComment             "//.*$"
 syn keyword xppType               boolean
+syn match xppLabel                "@[A-Z]\{3}[0-9]\{1,10}"
+syn region xppLabel               start=+@[A-Z]\{3}+ end=+[0-9]\{1,10}+
 
 hi def link xppNumber Number
 hi def link xpoHeader Comment
