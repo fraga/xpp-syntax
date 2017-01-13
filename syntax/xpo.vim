@@ -1,6 +1,9 @@
 if exists("b:current_syntax")
     finish
 endif
+
+hi Label guifg=white guibg=magenta
+
 syn match   xpoHeader            "Exportfile for AOT version 1.0 or later"
 syn match   xppNumber            "\<\(0[0-7]*\|0[xX]\x\+\|\d\+\)[lL]\=\>"
 syn match   xppNumber            "\(\<\d\+\.\d*\|\.\d\+\)\([eE][-+]\=\d\+\)\=[fFdD]\="
