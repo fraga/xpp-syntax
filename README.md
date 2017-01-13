@@ -1,1 +1,1 @@
-Simple X++ vim highlight
+Simple xpo vim highlight profile
