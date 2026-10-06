@@ -191,6 +191,33 @@ test('AxClass XML highlights only the Declaration and Source CDATA as X++', () =
   has(result, 6, 'AxClass', 'entity.name.tag.localname.xml');
 });
 
+test('raw X++ and inline XML CDATA recognize extension attributes independently', () => {
+  const snippet = '[ExtensionOf(tablenum(custtable))]';
+  for (const padding of ['', ' \t']) {
+    const result = tokenize('<AxClass>\n<Declaration><![CDATA[' + padding + snippet + ']]></Declaration>\n<Source><![CDATA[' + padding + '[SysEntryPointAttribute(true)]]]></Source>\n<Other><![CDATA[' + snippet + ']]></Other>\n</AxClass>');
+    has(result, 1, 'ExtensionOf', 'entity.name.type.attribute.xpp');
+    has(result, 1, 'tablenum', 'support.function.compile-time.xpp');
+    has(result, 2, 'SysEntryPointAttribute', 'entity.name.type.attribute.xpp');
+    has(result, 3, 'ExtensionOf', 'string.unquoted.cdata.xml');
+    lacks(result, 3, 'ExtensionOf', 'meta.attribute.');
+    has(result, 4, 'AxClass', 'entity.name.tag.localname.xml');
+    lacks(result, 4, 'AxClass', 'meta.embedded.');
+  }
+  const raw = tokenize(snippet);
+  has(raw, 0, 'ExtensionOf', 'entity.name.type.attribute.xpp');
+  has(raw, 0, 'tablenum', 'support.function.compile-time.xpp');
+  assert.ok(raw.closed);
+});
+
+test('inline CDATA distinguishes bare attributes from container assignments', () => {
+  const result = tokenize('<AxClass>\n<Declaration><![CDATA[[DataContract]]]></Declaration>\n<Source><![CDATA[[item] = values;]]></Source>\n</AxClass>');
+  has(result, 1, 'DataContract', 'entity.name.type.attribute.xpp');
+  has(result, 2, 'item', 'meta.container.xpp');
+  lacks(result, 2, 'item', 'meta.attribute.');
+  has(result, 3, 'AxClass', 'entity.name.tag.localname.xml');
+  lacks(result, 3, 'AxClass', 'meta.embedded.');
+});
+
 test('real-world D365 class metadata closes each embedded source region', async () => {
   for (const name of ['DEVSysTimer.xml', 'DEVFileReaderCSV.xml']) {
     const source = await readFile(new URL('../test/fixtures/' + name, import.meta.url), 'utf8');

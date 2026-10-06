@@ -264,7 +264,7 @@
     },
     "attributes": {
       "name": "meta.attribute.xpp",
-      "begin": "^[ \\t]*\\[(?=[A-Za-z_][A-Za-z0-9_]*[ \\t]*(?:\\(|\\][ \\t]*(?:$|(?i:public|private|protected|internal|final|class|interface)\\b)))",
+      "begin": "(?:^|(?<=<!\\[CDATA\\[))[ \\t]*\\[(?=[A-Za-z_][A-Za-z0-9_]*[ \\t]*(?:\\(|\\][ \\t]*(?:$|\\]\\]>|(?i:public|private|protected|internal|final|class|interface)\\b)))",
       "end": "\\]",
       "beginCaptures": {
         "0": {
