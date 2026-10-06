@@ -1,0 +1,577 @@
+{
+  "name": "X++",
+  "scopeName": "source.xpp",
+  "fileTypes": [
+    "xpp"
+  ],
+  "patterns": [
+    {
+      "include": "#xml-document"
+    },
+    {
+      "include": "#code"
+    }
+  ],
+  "repository": {
+    "code": {
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#macros"
+        },
+        {
+          "include": "#escaped-identifiers"
+        },
+        {
+          "include": "#attributes"
+        },
+        {
+          "include": "#declarations"
+        },
+        {
+          "include": "#member-access"
+        },
+        {
+          "include": "#constants"
+        },
+        {
+          "include": "#keywords"
+        },
+        {
+          "include": "#types"
+        },
+        {
+          "include": "#intrinsics"
+        },
+        {
+          "include": "#numbers"
+        },
+        {
+          "include": "#references"
+        },
+        {
+          "include": "#functions"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#groups"
+        }
+      ]
+    },
+    "xml-document": {
+      "name": "meta.document.xml.xpp",
+      "begin": "^(?:\\x{FEFF})?[ \\t]*(?=<!--|<\\?xml\\b|<AxClass(?:\\s|>))",
+      "end": "(?!)",
+      "patterns": [
+        {
+          "include": "#xml-source"
+        },
+        {
+          "include": "text.xml"
+        }
+      ]
+    },
+    "xml-source": {
+      "name": "meta.source-element.xml.xpp",
+      "begin": "(<)(Declaration|Source)(>)",
+      "end": "(</)(\\2)(>)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.xml"
+        },
+        "2": {
+          "name": "entity.name.tag.xml"
+        },
+        "3": {
+          "name": "punctuation.definition.tag.end.xml"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.xml"
+        },
+        "2": {
+          "name": "entity.name.tag.xml"
+        },
+        "3": {
+          "name": "punctuation.definition.tag.end.xml"
+        }
+      },
+      "patterns": [
+        {
+          "name": "meta.embedded.block.xpp",
+          "contentName": "source.xpp",
+          "begin": "<!\\[CDATA\\[",
+          "end": "\\]\\]>",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.xml"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.xml"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#code"
+            }
+          ]
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.documentation.xpp",
+          "begin": "///",
+          "end": "$",
+          "patterns": [
+            {
+              "name": "entity.name.tag.documentation.xpp",
+              "match": "</?[A-Za-z_][A-Za-z0-9_]*\\b"
+            }
+          ]
+        },
+        {
+          "name": "comment.line.double-slash.xpp",
+          "match": "//.*$"
+        },
+        {
+          "include": "#block-comment"
+        }
+      ]
+    },
+    "block-comment": {
+      "name": "comment.block.xpp",
+      "begin": "/\\*",
+      "end": "\\*/",
+      "patterns": [
+        {
+          "include": "#block-comment"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.verbatim.xpp",
+          "begin": "@\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "include": "#string-content"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.xpp",
+          "begin": "\"",
+          "end": "\"|$",
+          "patterns": [
+            {
+              "name": "constant.character.escape.xpp",
+              "match": "\\\\(?:u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2,4}|.)"
+            },
+            {
+              "include": "#string-content"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.verbatim.xpp",
+          "begin": "@'",
+          "end": "'",
+          "patterns": [
+            {
+              "include": "#string-content"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.xpp",
+          "begin": "'",
+          "end": "'|$",
+          "patterns": [
+            {
+              "name": "constant.character.escape.xpp",
+              "match": "\\\\(?:u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2,4}|.)"
+            },
+            {
+              "include": "#string-content"
+            }
+          ]
+        }
+      ]
+    },
+    "string-content": {
+      "patterns": [
+        {
+          "name": "constant.other.label.temporary.xpp",
+          "match": "(?<=[\"'])@\\$[A-Za-z]{2}[0-9]+(?=[\"'])"
+        },
+        {
+          "name": "constant.other.label.xpp",
+          "match": "(?<=[\"'])@(?:[A-Za-z]{3}[0-9]+|[A-Za-z_][A-Za-z0-9_]*:[A-Za-z_][A-Za-z0-9_]*)(?=[\"'])"
+        },
+        {
+          "name": "constant.other.placeholder.xpp",
+          "match": "%[1-9][0-9]*"
+        }
+      ]
+    },
+    "macros": {
+      "patterns": [
+        {
+          "name": "meta.preprocessor.xpp",
+          "match": "(#)(?i:(define|globaldefine|globalmacro|localmacro|macro|undef))(\\.)([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.directive.xpp"
+            },
+            "2": {
+              "name": "keyword.control.directive.xpp"
+            },
+            "3": {
+              "name": "punctuation.separator.xpp"
+            },
+            "4": {
+              "name": "entity.name.constant.xpp"
+            }
+          }
+        },
+        {
+          "name": "keyword.control.directive.xpp",
+          "match": "#(?i:if|ifnot|endif|endmacro|macrolib)\\b"
+        },
+        {
+          "name": "constant.other.macro.xpp",
+          "match": "#[A-Za-z_][A-Za-z0-9_]*\\b"
+        }
+      ]
+    },
+    "escaped-identifiers": {
+      "name": "variable.other.xpp",
+      "match": "@[A-Za-z_][A-Za-z0-9_]*\\b"
+    },
+    "attributes": {
+      "name": "meta.attribute.xpp",
+      "begin": "^[ \\t]*\\[(?=[A-Za-z_][A-Za-z0-9_]*[ \\t]*(?:\\(|\\][ \\t]*(?:$|(?i:public|private|protected|internal|final|class|interface)\\b)))",
+      "end": "\\]",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.attribute.begin.xpp"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.attribute.end.xpp"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#intrinsics"
+        },
+        {
+          "include": "#constants"
+        },
+        {
+          "include": "#numbers"
+        },
+        {
+          "name": "entity.name.type.attribute.xpp",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b"
+        },
+        {
+          "include": "#groups"
+        },
+        {
+          "include": "#operators"
+        }
+      ]
+    },
+    "declarations": {
+      "patterns": [
+        {
+          "name": "meta.class.xpp",
+          "match": "\\b(?i:(class|interface))[ \\t]+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "storage.type.xpp"
+            },
+            "2": {
+              "name": "entity.name.type.class.xpp"
+            }
+          }
+        },
+        {
+          "match": "\\b(?i:(extends|implements))[ \\t]+([A-Za-z_][A-Za-z0-9_.]*)",
+          "captures": {
+            "1": {
+              "name": "storage.modifier.xpp"
+            },
+            "2": {
+              "name": "entity.name.type.xpp"
+            }
+          }
+        },
+        {
+          "match": "\\b(?i:(new))[ \\t]+([A-Za-z_][A-Za-z0-9_.]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.new.xpp"
+            },
+            "2": {
+              "name": "entity.name.type.xpp"
+            }
+          }
+        }
+      ]
+    },
+    "constants": {
+      "name": "constant.language.xpp",
+      "match": "\\b(?i:false|null|true)\\b"
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.primitive.xpp",
+          "match": "\\b(?i:anytype|boolean|container|date|guid|int|int64|real|str|timeofday|utcdatetime|var|void)\\b"
+        },
+        {
+          "name": "storage.modifier.xpp",
+          "match": "\\b(?i:abstract|byref|client|const|delegate|display|edit|final|internal|private|protected|public|readonly|server|static)\\b"
+        },
+        {
+          "name": "entity.name.type.xpp",
+          "match": "\\b[A-Z][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*\\b(?=[ \\t]+[A-Za-z_][A-Za-z0-9_]*[ \\t]*(?:[;=,()\\[]|$))"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.xpp",
+          "match": "\\b(?i:at|break|breakpoint|case|catch|changecompany|continue|default|do|else|finally|flush|for|if|next|pause|print|retry|return|switch|throw|try|ttsabort|ttsbegin|ttscommit|unchecked|using|while|window)\\b"
+        },
+        {
+          "name": "storage.type.xpp",
+          "match": "\\b(?i:class|interface)\\b"
+        },
+        {
+          "name": "storage.modifier.xpp",
+          "match": "\\b(?i:extends|implements)\\b"
+        },
+        {
+          "name": "keyword.other.namespace.xpp",
+          "match": "\\b(?i:namespace)\\b"
+        },
+        {
+          "name": "variable.language.xpp",
+          "match": "\\b(?i:super|this)\\b"
+        },
+        {
+          "name": "keyword.other.query.xpp",
+          "match": "\\b(?i:asc|avg|by|count|crosscompany|delete_from|desc|exists|firstfast|firstonly|firstonly1|firstonly10|firstonly100|firstonly1000|forceliterals|forcenestedloop|forceplaceholders|forceselectorder|forupdate|from|generateonly|group|hint|index|insert_recordset|join|maxof|minof|nofetch|notexists|optimisticlock|order|outer|pessimisticlock|repeatableread|reverse|select|setting|sum|tablelock|update_recordset|validtimestate|where)\\b"
+        },
+        {
+          "name": "keyword.operator.word.xpp",
+          "match": "\\b(?i:as|div|in|is|like|mod)\\b"
+        }
+      ]
+    },
+    "intrinsics": {
+      "patterns": [
+        {
+          "name": "support.function.compile-time.xpp",
+          "match": "\\b(?i:attributestr|classnum|classstr|configurationkeynum|configurationkeystr|dataentitydatasourcestr|dataentityviewstr|delegatestr|dimensionhierarchylevelstr|dimensionhierarchystr|dimensionreferencestr|dutystr|enumcnt|enumliteralstr|enumnum|enumstr|extendedtypenum|extendedtypestr|fieldnum|fieldpname|fieldstr|formcontrolstr|formdatafieldstr|formdatasourcestr|formmethodstr|formstr|identifierstr|indexnum|indexstr|licensecodenum|licensecodestr|literalstr|mapstr|maxdate|maxint|measurementstr|measurestr|menuitemactionstr|menuitemdisplaystr|menuitemoutputstr|menustr|methodstr|minint|privilegestr|querydatasourcestr|querymethodstr|querystr|reportstr|resourcestr|rolestr|ssrsreportstr|staticdelegatestr|staticmethodstr|tablecollectionstr|tablefieldgroupstr|tablemethodstr|tablenum|tablepname|tablestaticmethodstr|tablestr|tilestr|varstr|viewstr|webactionitemstr|webdisplaycontentitemstr|webformstr|webletitemstr|webmenustr|weboutputcontentitemstr|webpagedefstr|webreportstr|websitedefstr|websitetempstr|webstaticfilestr|weburlitemstr|webwebpartstr|workflowapprovalstr|workflowcategorystr|workflowtaskstr|workflowtypestr)\\b(?=[ \\t]*\\()"
+        },
+        {
+          "name": "support.function.builtin.xpp",
+          "match": "\\b(?i:abs|any2date|any2int|any2int64|any2real|any2str|checkfailed|conadd|condel|confind|conins|conlen|connull|conpeek|conpoke|date2str|error|eventhandler|info|int2str|max|min|num2str|round|str2date|str2int|str2int64|str2num|strfmt|strlen|strlwr|strreplace|strscan|strupr|substr|today|trunc|warning)\\b(?=[ \\t]*\\()"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.datetime.xpp",
+          "match": "\\b[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt][0-9]{2}:[0-9]{2}:[0-9]{2}\\b"
+        },
+        {
+          "name": "constant.numeric.date.xpp",
+          "match": "\\b[0-9]{1,2}\\\\[0-9]{1,2}\\\\[0-9]{4}\\b"
+        },
+        {
+          "name": "constant.numeric.hex.xpp",
+          "match": "\\b0[xX][0-9a-fA-F]+[uU]?\\b"
+        },
+        {
+          "name": "constant.numeric.binary.xpp",
+          "match": "\\b0[bB][01]+\\b"
+        },
+        {
+          "name": "constant.numeric.xpp",
+          "match": "(?<![\\w.])(?:[0-9]+\\.[0-9]*(?:[eE][+-]?[0-9]+)?|\\.[0-9]+(?:[eE][+-]?[0-9]+)?|[0-9]+(?:[eE][+-]?[0-9]+|[uU])?)(?!\\w)"
+        }
+      ]
+    },
+    "member-access": {
+      "patterns": [
+        {
+          "match": "(\\.)[ \\t]*(@?[A-Za-z_][A-Za-z0-9_]*)\\b(?=[ \\t]*\\()",
+          "captures": {
+            "1": {
+              "name": "punctuation.accessor.xpp"
+            },
+            "2": {
+              "name": "entity.name.function.xpp"
+            }
+          }
+        },
+        {
+          "match": "(\\.)[ \\t]*(@?[A-Za-z_][A-Za-z0-9_]*)\\b",
+          "captures": {
+            "1": {
+              "name": "punctuation.accessor.xpp"
+            },
+            "2": {
+              "name": "variable.other.member.xpp"
+            }
+          }
+        }
+      ]
+    },
+    "references": {
+      "patterns": [
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)(::)([A-Za-z_][A-Za-z0-9_]*)\\b(?![ \\t]*\\()",
+          "captures": {
+            "1": {
+              "name": "entity.name.type.xpp"
+            },
+            "2": {
+              "name": "punctuation.accessor.xpp"
+            },
+            "3": {
+              "name": "constant.other.enum.xpp"
+            }
+          }
+        },
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)(::)",
+          "captures": {
+            "1": {
+              "name": "entity.name.type.xpp"
+            },
+            "2": {
+              "name": "punctuation.accessor.xpp"
+            }
+          }
+        }
+      ]
+    },
+    "functions": {
+      "name": "entity.name.function.xpp",
+      "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b(?=[ \\t]*\\()"
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.xpp",
+          "match": "<<=|>>=|\\+\\+|--|\\+=|-=|\\*=|/=|==|!=|<=|>=|&&|\\|\\||<<|>>|[-+*/%<>=!&|^~?:]"
+        },
+        {
+          "name": "punctuation.accessor.xpp",
+          "match": "::|\\."
+        },
+        {
+          "name": "punctuation.terminator.statement.xpp",
+          "match": ";"
+        },
+        {
+          "name": "punctuation.separator.xpp",
+          "match": ","
+        }
+      ]
+    },
+    "groups": {
+      "patterns": [
+        {
+          "name": "meta.group.xpp",
+          "begin": "\\(",
+          "end": "\\)",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.group.begin.xpp"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.group.end.xpp"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#code"
+            }
+          ]
+        },
+        {
+          "name": "meta.container.xpp",
+          "begin": "\\[",
+          "end": "\\]",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.brackets.begin.xpp"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.brackets.end.xpp"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#code"
+            }
+          ]
+        },
+        {
+          "name": "meta.block.xpp",
+          "begin": "\\{",
+          "end": "\\}",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.block.begin.xpp"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.block.end.xpp"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#code"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

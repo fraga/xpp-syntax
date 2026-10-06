@@ -1,0 +1,39 @@
+/// <summary>Update customer credit limits in the current company.</summary>
+[ExtensionOf(tableStr(CustTable))]
+final class CustTable_CreditLimit_Extension
+{
+    public boolean validateWrite()
+    {
+        boolean valid = next validateWrite();
+        if (this.CreditMax < 0)
+        {
+            valid = checkFailed("@MyLabels:CreditLimitMustBePositive");
+        }
+        return valid;
+    }
+}
+
+public final class CreditLimitService
+{
+    public static void updateLimits(CustGroupId _groupId, AmountCur _limit)
+    {
+        CustTable custTable;
+
+        try
+        {
+            ttsBegin;
+            while select forUpdate custTable
+                where custTable.CustGroup == _groupId
+            {
+                custTable.CreditMax = _limit;
+                custTable.update();
+            }
+            ttsCommit;
+            info(strFmt("Updated group %1", _groupId));
+        }
+        catch (Exception::UpdateConflict)
+        {
+            retry;
+        }
+    }
+}

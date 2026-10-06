@@ -1,0 +1,25 @@
+{
+  "name": "@fraga/xpp-syntax",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TextMate grammar for Microsoft Dynamics 365 X++ and Dynamics AX",
+  "author": "Rod Fraga <303538+fraga@users.noreply.github.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fraga/xpp-syntax.git"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "preview": "node scripts/preview.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@shikijs/langs": "4.5.0",
+    "vscode-oniguruma": "2.0.1",
+    "vscode-textmate": "9.3.2"
+  }
+}

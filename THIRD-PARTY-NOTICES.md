@@ -1,7 +1,17 @@
+# Third-party test fixtures
+
+`test/fixtures/DEVSysTimer.xml` and `test/fixtures/DEVFileReaderCSV.xml`
+are copied without modification from Denis Trunin's
+[TrudAX/XppTools](https://github.com/TrudAX/XppTools) at commit
+`97442e905e94f28c9478112b46e48293ce514d2c`.
+
+- [DEVSysTimer.xml](https://github.com/TrudAX/XppTools/blob/97442e905e94f28c9478112b46e48293ce514d2c/DEVCommon/DEVCommon/AxClass/DEVSysTimer.xml)
+- [DEVFileReaderCSV.xml](https://github.com/TrudAX/XppTools/blob/97442e905e94f28c9478112b46e48293ce514d2c/DEVCommon/DEVCommon/AxClass/DEVFileReaderCSV.xml)
+- [Original MIT license](https://github.com/TrudAX/XppTools/blob/97442e905e94f28c9478112b46e48293ce514d2c/LICENSE)
+
 MIT License
 
-Copyright (c) 2017 Rodrigo Fraga
-Copyright (c) 2026 Rod Fraga
+Copyright (c) 2019 Denis Trunin
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
